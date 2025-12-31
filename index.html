@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Number Game</title>
+        <link rel="stylesheet" href="main.css" />
+        <style></style>
+    </head>
+    <body>
+        <div class="app">
+            <header>
+                <div class="title">
+                    <h1>Number Game</h1>
+                    <p>
+                        Listen to a number and type it in within 10 seconds.
+                        Correct — streak increases, incorrect — streak resets.
+                    </p>
+                </div>
+                <div class="stats">
+                    <div class="pill">Streak: <b id="streak">0</b></div>
+                    <div class="pill">High Score: <b id="highScore">—</b></div>
+                </div>
+            </header>
+
+            <div class="main">
+                <div class="row">
+                    <div class="inputWrap">
+                        <label for="answer">Enter the number</label>
+                        <input
+                            id="answer"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="off"
+                        />
+                        <div class="tiny">
+                            Hints:
+                            <span class="kbd">R</span> — repeat pronunciation •
+                            <span class="kbd">N</span> — new number
+                        </div>
+                    </div>
+                    <div class="btns">
+                        <button class="primary" id="startBtn">Start</button>
+                        <button id="repeatBtn" disabled>Repeat</button>
+                        <button id="newBtn" disabled>New</button>
+                        <button class="danger" id="resetBtn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="meta">
+                    <div class="bar" aria-label="таймер">
+                        <div id="progress"></div>
+                    </div>
+                    <div class="status">
+                        <div id="message">Press Start</div>
+                        <div
+                            id="resultBadge"
+                            class="badge"
+                            style="display: none"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="main.js"></script>
+    </body>
+</html>
