@@ -4,6 +4,35 @@ const MAX = 1_000_000;
 const ROUND_MS = 10_000;
 const TICK_MS = 50;
 
+// ======= High score (localStorage) =======
+const HIGH_SCORE_KEY = "number_game_high_score_v1";
+let highScore = 0;
+
+function loadHighScore() {
+	try {
+		const raw = localStorage.getItem(HIGH_SCORE_KEY);
+		const n = parseInt(raw ?? "0", 10);
+		highScore = Number.isFinite(n) && n > 0 ? n : 0;
+	} catch {
+		highScore = 0;
+	}
+}
+
+function saveHighScore(value) {
+	try {
+		localStorage.setItem(HIGH_SCORE_KEY, String(value));
+	} catch {
+		// ignore
+	}
+}
+
+function maybeUpdateHighScore() {
+	if (streak > highScore) {
+		highScore = streak;
+		saveHighScore(highScore);
+	}
+}
+
 // ======= State =======
 let currentNumber = null;
 let streak = 0;
@@ -54,6 +83,7 @@ function normalizeDigits(s) {
 
 function updateUI() {
 	streakEl.textContent = String(streak);
+	highScoreEl.textContent = String(highScore);
 	repeatBtn.disabled = currentNumber == null;
 	newBtn.disabled = currentNumber == null;
 }
@@ -79,7 +109,6 @@ function startTimer() {
 		progressEl.style.transform = `scaleX(${frac})`;
 
 		if (remaining <= 0) {
-			// time out => treat as wrong
 			clearInterval(timerId);
 			timerId = null;
 			handleSubmit(true); // timed out
@@ -127,12 +156,12 @@ function newRound() {
 	currentNumber = randInt(MIN, MAX);
 	updateUI();
 
-	setMessage("Listen for the number, time is running!");
+	setMessage("Listen for the number — time is running!");
 	speakNumberRu(currentNumber);
 	startTimer();
 }
 
-function resetGame(msg = "Press start to restart") {
+function resetGame(msg = "Press Start to play") {
 	stopTimer();
 	streak = 0;
 	currentNumber = null;
@@ -155,19 +184,22 @@ function handleSubmit(isTimeout = false) {
 
 	if (ok) {
 		streak += 1;
+		maybeUpdateHighScore();
 		updateUI();
+
 		setBadge("good", "Correct ✓");
-		setMessage("Good! Next number.");
+		setMessage("Nice! Next number.");
 		// small delay to let user see result
 		setTimeout(() => newRound(), 500);
 	} else {
 		streak = 0;
 		updateUI();
-		setBadge("bad", isTimeout ? "Timeout ✗" : "Incorrect ✗");
+
+		setBadge("bad", isTimeout ? "Time's up ✗" : "Incorrect ✗");
 		setMessage(
 			isTimeout
-				? `Время вышло. Правильный ответ был: ${correct}. Начинаем заново…`
-				: `Неверно. Правильный ответ был: ${correct}. Начинаем заново…`,
+				? `Time's up. The correct answer was: ${correct}. Starting over…`
+				: `Incorrect. The correct answer was: ${correct}. Starting over…`,
 		);
 		// Start over with a fresh number after a short pause
 		setTimeout(() => newRound(), 900);
@@ -177,7 +209,7 @@ function handleSubmit(isTimeout = false) {
 function repeatSpeech() {
 	if (currentNumber == null) return;
 	speakNumberRu(currentNumber);
-	setMessage("Repeating the number, the clock is still ticking!");
+	setMessage("Repeating the number — the clock is still ticking!");
 }
 
 // ======= Events =======
@@ -194,11 +226,13 @@ repeatBtn.addEventListener("click", repeatSpeech);
 
 newBtn.addEventListener("click", () => {
 	if (currentNumber == null) return;
-	setMessage("Новое число…");
+	setMessage("New number…");
 	newRound();
 });
 
-resetBtn.addEventListener("click", () => resetGame("Lost. Press restart!"));
+resetBtn.addEventListener("click", () =>
+	resetGame("Lost. Press Start to restart!"),
+);
 
 answerEl.addEventListener("input", () => {
 	if (!roundActive || currentNumber == null) return;
@@ -212,7 +246,7 @@ answerEl.addEventListener("input", () => {
 });
 
 document.addEventListener("keydown", (e) => {
-	// avoid hijacking typing in the input except for Enter (handled above)
+	// avoid hijacking typing in the input except for shortcuts
 	const inInput = document.activeElement === answerEl;
 
 	if (!inInput && (e.key === "r" || e.key === "R")) {
@@ -223,5 +257,6 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
-// Initial UI
+// ======= Initial UI =======
+loadHighScore();
 resetGame("Press Start");
