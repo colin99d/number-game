@@ -269,3 +269,76 @@ summary {
     border-radius: 8px;
     color: var(--text);
 }
+
+/* --- Language select styling --- */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    padding: 10px 40px 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--sans);
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        transform 0.08s ease,
+        background 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+    outline: none;
+
+    /* custom chevron */
+    background-image:
+        linear-gradient(45deg, transparent 50%, rgba(233, 238, 252, 0.85) 50%),
+        linear-gradient(135deg, rgba(233, 238, 252, 0.85) 50%, transparent 50%),
+        linear-gradient(to right, transparent, transparent);
+    background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%,
+        100% 0;
+    background-size:
+        6px 6px,
+        6px 6px,
+        2.5em 2.5em;
+    background-repeat: no-repeat;
+}
+
+select:hover {
+    background-color: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+select:focus {
+    border-color: rgba(106, 168, 255, 0.55);
+    box-shadow: 0 0 0 4px rgba(106, 168, 255, 0.12);
+}
+
+select:active {
+    transform: translateY(1px);
+}
+
+select:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Options (limited styling support across browsers, but helps in many) */
+select option {
+    background: #0f1522; /* close to your bg */
+    color: var(--text);
+}
+
+/* Optional: if your select sits in that inline header row, make it align nicely */
+#languageSelect {
+    min-width: 170px;
+}
+
+/* Optional: nicer label spacing when placed next to select */
+header label[for="languageSelect"] {
+    margin-right: 6px;
+}
