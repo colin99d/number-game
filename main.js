@@ -99,7 +99,6 @@ const progressEl = document.getElementById("progress");
 
 const startBtn = document.getElementById("startBtn");
 const repeatBtn = document.getElementById("repeatBtn");
-const newBtn = document.getElementById("newBtn");
 const resetBtn = document.getElementById("resetBtn");
 
 // ======= Helpers =======
@@ -132,7 +131,6 @@ function updateUI() {
 	streakEl.textContent = String(streak);
 	highScoreEl.textContent = String(highScore);
 	repeatBtn.disabled = currentNumber == null;
-	newBtn.disabled = currentNumber == null;
 }
 
 function stopTimer() {
@@ -273,13 +271,6 @@ startBtn.addEventListener("click", () => {
 });
 
 repeatBtn.addEventListener("click", repeatSpeech);
-
-newBtn.addEventListener("click", () => {
-	if (currentNumber == null) return;
-	clearPendingNextRound(); // user manually requests a new number
-	setMessage("New number…");
-	newRound();
-});
 
 resetBtn.addEventListener("click", () => {
 	resetGame("Lost. Press Start to restart!");
