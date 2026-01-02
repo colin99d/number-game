@@ -342,3 +342,127 @@ select option {
 header label[for="languageSelect"] {
     margin-right: 6px;
 }
+
+/* --- Mobile friendly tweaks --- */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    padding: 16px; /* меньше поля на мобилке */
+}
+
+.app {
+    padding: 18px;
+}
+
+/* отдельная строка для выбора языка */
+.langRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+/* чтобы поля/кнопки не были слишком мелкими на тач-экранах */
+input[type="text"],
+select,
+button {
+    min-height: 44px; /* рекомендация для тапа */
+}
+
+button {
+    touch-action: manipulation;
+}
+
+/* --- Breakpoint: телефоны --- */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+        place-items: start; /* не “вечно по центру”, чтобы не прыгало с клавиатурой */
+    }
+
+    .app {
+        width: 100%;
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .title h1 {
+        font-size: 20px;
+    }
+
+    .title p {
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    /* главный ряд: инпут + кнопки -> в колонку */
+    .row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* кнопки в две колонки (удобно и компактно) */
+    .btns {
+        justify-content: stretch;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    /* если кнопок 3 — пусть третья занимает всю ширину */
+    .btns button.danger {
+        grid-column: 1 / -1;
+    }
+
+    button {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px 12px;
+        white-space: normal; /* на всякий случай, если текст длиннее */
+    }
+
+    #languageSelect {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .stats {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .pill {
+        width: fit-content;
+        max-width: 100%;
+    }
+
+    .status {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    #resultBadge {
+        align-self: flex-start;
+    }
+}
+
+/* --- Очень маленькие экраны --- */
+@media (max-width: 360px) {
+    .btns {
+        grid-template-columns: 1fr; /* кнопки вертикально */
+    }
+
+    .btns button.danger {
+        grid-column: auto;
+    }
+}
