@@ -6,7 +6,7 @@ const TICK_MS = 50;
 
 // ======= Language + High score (localStorage) =======
 const LANGUAGE_KEY = "number_game_language_v1";
-const HIGH_SCORE_PREFIX = "number_game_high_score_v1_"; // per-language key
+const HIGH_SCORE_PREFIX = "number_game_high_score_v2_"; // per-language key
 
 const languageSelect = document.getElementById("languageSelect");
 
@@ -98,7 +98,6 @@ const badgeEl = document.getElementById("resultBadge");
 const progressEl = document.getElementById("progress");
 
 const startBtn = document.getElementById("startBtn");
-const repeatBtn = document.getElementById("repeatBtn");
 const resetBtn = document.getElementById("resetBtn");
 
 // ======= Helpers =======
@@ -130,7 +129,6 @@ function normalizeDigits(s) {
 function updateUI() {
 	streakEl.textContent = String(streak);
 	highScoreEl.textContent = String(highScore);
-	repeatBtn.disabled = currentNumber == null;
 }
 
 function stopTimer() {
@@ -233,7 +231,6 @@ function handleSubmit(isTimeout = false) {
 	const ok = !isTimeout && typed.length > 0 && typed === correct;
 
 	if (ok) {
-		// ✅ CHANGE: auto-start next round when correct
 		streak += 1;
 		maybeUpdateHighScore();
 		updateUI();
@@ -255,12 +252,6 @@ function handleSubmit(isTimeout = false) {
 	}
 }
 
-function repeatSpeech() {
-	if (currentNumber == null) return;
-	speakNumber(currentNumber);
-	setMessage("Repeating the number — the clock is still ticking!");
-}
-
 // ======= Events =======
 startBtn.addEventListener("click", () => {
 	clearPendingNextRound(); // avoid double-start if a correct answer scheduled next round
@@ -269,8 +260,6 @@ startBtn.addEventListener("click", () => {
 	setMessage("New round…");
 	newRound();
 });
-
-repeatBtn.addEventListener("click", repeatSpeech);
 
 resetBtn.addEventListener("click", () => {
 	resetGame("Lost. Press Start to restart!");
